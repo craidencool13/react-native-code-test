@@ -59,7 +59,6 @@ class UserScreen extends Component {
      FetchApi('users', params, 'GET').then((data)=>{
 
         setTimeout(async () => {
-          console.log('Data', data)
           this.setState({users: [...this.state.users, ...data.data],
                         total_pages: data.total_pages,
                         isGettingUsers: false,
@@ -70,8 +69,6 @@ class UserScreen extends Component {
         }, 3000);
 
      }).catch((err)=>{
-
-        console.log('Err', err)
         this.setState({isGettingUsers: false,
                       loading: false,
                       infiniteLoad: false
@@ -123,13 +120,12 @@ class UserScreen extends Component {
   }
   
   render(){
-    const { infiniteLoad, loading, refresh, page, total_pages} = this.state
+    const { infiniteLoad, loading, refresh, page, total_pages, users} = this.state
     return(
       <View style={styles.container}>
             { loading && <Loader /> }
 
             { !loading && 
-
               <ScrollView
                       scrollEventThrottle={Platform.OS == 'ios' ? 200 : 16}
                       onScroll={this.isCloseToBottom}
@@ -140,7 +136,7 @@ class UserScreen extends Component {
                         />
                   }>
 
-                  {true && this.renderUsers() }
+                  { users.length > 0 && this.renderUsers() }
 
                   { infiniteLoad &&
                     <View style={styles.loadingContainer}>
